@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Family Details Form</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <div class="text-center mb-4">
+        <h1 class="display-5 fw-bold">Divisional Secretariat - Colombo</h1>
+        <p class="lead text-muted">Family Data Submission Form</p>
+        <hr class="my-4" />
+      </div>
+    </div>
+
+    <div class="container mt-5">
+      <h2>Family Details Form</h2>
+      <form method="post" action="submit_form.php">
+        <!-- Main Person Details -->
+        <div class="mb-3">
+          <label for="mainPersonName" class="form-label"
+            >Householder's Name</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="mainPersonName"
+            name="main_person_name"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="homeAddress" class="form-label">Home Address</label>
+          <input
+            type="text"
+            class="form-control"
+            id="homeAddress"
+            name="home_address"
+            required
+          />
+        </div>
+
+        <!-- Family Members Table -->
+        <h4>Family Members</h4>
+        <table class="table table-bordered" id="familyMembersTable">
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>Name</th>
+              <th>Age</th>
+              <th>Marital Status</th>
+              <th>Occupation</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Main Person Row -->
+            <tr>
+              <td>1</td>
+              <td>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="memberName1"
+                  name="member_name[]"
+                  required
+                />
+              </td>
+              <td>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="memberAge1"
+                  name="member_age[]"
+                  required
+                />
+              </td>
+              <td>
+                <select
+                  class="form-select"
+                  id="memberMaritalStatus1"
+                  name="member_marital_status[]"
+                  required
+                >
+                  <option value="">Select</option>
+                  <option value="Single">Single</option>
+                  <option value="Married">Married</option>
+                  <option value="Divorced">Divorced</option>
+                  <option value="Widowed">Widowed</option>
+                </select>
+              </td>
+              <td>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="memberOccupation1"
+                  name="member_occupation[]"
+                  required
+                />
+              </td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Add Member Button -->
+        <button type="button" class="btn btn-secondary mb-3" id="addMemberBtn">
+          Add Another Member
+        </button>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary mb-3">Submit</button>
+      </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      let memberCount = 1;
+
+      // Populate the main person's details in the first row of the table
+      document
+        .getElementById("mainPersonName")
+        .addEventListener("input", function () {
+          document.getElementById("memberName1").value = this.value;
+        });
+
+      // Add new member rows
+      document
+        .getElementById("addMemberBtn")
+        .addEventListener("click", function () {
+          memberCount++;
+          let newRow = document.createElement("tr");
+          newRow.innerHTML = `
+                <td>${memberCount}</td>
+                <td><input type="text" class="form-control" id="memberName${memberCount}" name="member_name[]" required></td>
+                <td><input type="number" class="form-control" id="memberAge${memberCount}" name="member_age[]" required></td>
+                <td>
+                    <select class="form-select" id="memberMaritalStatus${memberCount}" name="member_marital_status[]" required>
+                        <option value="">Select</option>
+                        <option value="Single">Single</option>
+                        <option value="Married">Married</option>
+                        <option value="Divorced">Divorced</option>
+                        <option value="Widowed">Widowed</option>
+                    </select>
+                </td>
+                <td><input type="text" class="form-control" id="memberOccupation${memberCount}" name="member_occupation[]" required></td>
+                <td><button type="button" class="btn btn-danger btn-sm removeMemberBtn">Remove</button></td>
+            `;
+          document
+            .querySelector("#familyMembersTable tbody")
+            .appendChild(newRow);
+        });
+
+      // Remove member rows
+      document.addEventListener("click", function (e) {
+        if (e.target && e.target.classList.contains("removeMemberBtn")) {
+          e.target.closest("tr").remove();
+          // Update row numbers after removal
+          updateRowNumbers();
+        }
+      });
+
+      function updateRowNumbers() {
+        let rows = document.querySelectorAll("#familyMembersTable tbody tr");
+        rows.forEach((row, index) => {
+          row.cells[0].innerText = index + 1;
+        });
+      }
+    </script>
+  </body>
+</html>
